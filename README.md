@@ -1,3 +1,4 @@
+To import the game engine, download the file: Shrek-game-engine.js. Next, put it as the _**first**_ script tag, then your code's script tag. This library is also available on npm, for those who use node (or browserify).
 # Shrek game engine
 Documentation and engine created by Paxon Kymissis
 
@@ -5,9 +6,9 @@ v1.0
 
 ---
 ## Section 1
-This section will be an overview of how the game engine works. The usage is documented in further sections.
+This section will be an overview of how the game engine works. The usage is documented in further sections. The game engine as shown on its github repository contains an additional game bundled in with the library. This is an absolute necessity for testing, and the game may be played if you wish, or can be ignored. All code (including the game) is free, and open-source under the MIT License. 
 #### Basic overview
-Shrek game engine is a bitmap game engine which is desgned for ease of animation, utility, speed, and small size. 
+Shrek game engine is a bitmap game engine which is desgned for ease of animation, utility, speed, and small size. The game engine is 100% frontend code that can be run in the browser, Or be used in an app (That supports web rendering). It is not reccomended however, that the engine is used in a browser, as a web browser may slow down code execution. This will drop the frame rate, and may cause som sub-frame processing glitches. Instead, use a dedicated renderer; You may also use a framework of your choice, although the reccomended usage is in electron.
 #### Structure
 Shrek game engine contains four main structures:
 ##### Items
@@ -45,6 +46,10 @@ The object contains the following:
 
 `game.room`, contains the current room you are in. Its value is checked every frame (int)
 
+`game.windowWidth`, contains the canvas width (int)
+
+`game.windowHeight`, contains the canvas height (int)
+
 `game.break`, is a special variable. When it is set to true, the game will stop on the next frame (boolean)
 
 ---
@@ -59,6 +64,7 @@ The object contains the following:
 `game.settings.dialogue`, is an object containing settings for the dialogue boxes. (object) It defaultly contains: `{font:'Helvetica', size:'10px', color:'black', background:'teal'}`
 
 Note that 'size' sets the _**font size**_
+
 ---
 ## Section 2
 This section is about the more in-depth properties of the engine. This section also contains the syntax for using game structures
@@ -68,6 +74,10 @@ Items contain multiple properties to function. This is a list of them:
 
 `x`, The x position (int)
 
+`width`, The width of the hitbox (int)
+
+`height`, The height of the hitbox (int)
+
 `y`, The y position (int)
 
 `track`, The series of images used to be put onscreen when animating the sprite. The array contains paths which lead to the images. (array)
@@ -75,11 +85,55 @@ Items contain multiple properties to function. This is a list of them:
 `frames`, The number of frames that each image in the animation track is displayed for (int)
 
 `render()`, The function that is called each frame (function)
+When declaring a  new item, you set each input argument like so:
+```
+var Table = new Item(x, y, track, frames)
+```
+The item rendering is taken care of by rooms, and does not concern the developer.
+However, rooms are not necessary if you only wish to have a 1 room game, or a customizable game to your liking. If so, you may use the render function every frame, and load background graphics with `loadImage(path, x, y)`. Note that collision detection is performed by rooms also.
+**Important**: paths to images are all relative to your game file.
+
+#### Sprites
+
+Full sprites contain:
+
+`x`, The x position (int)
+
+`y`, The y position (int)
+
+`width`, The width of the hitbox (int)
+
+`height`, The height of the hitbox (int)
+
+`tracks`, A list of animation tracks. (array)
+
+`track`, The current animation track. (int)
+
+`frames`, The number of frames that each image in the animation track is displayed for (int)
+
+`render()`, The function that is called each frame (function). Like with objects, you will not need to worry about this function (unless you are not using a map)
+
+`p`, An object that serves no purpose, other than to store information about the sprite. This object can only be changed by the developer, and is not interacted with by the engine. (object)
+
+`collision`, Information about the last sprite collision (object). It contains:
+
+`collision.type`, The type of the sprite which was collided with. True means it was an item, and false means that it was a full sprite (boolean)
+
+`collision.number`, The index of the sprite collided with in its respective room's sprite list (int)
+
+`collision.on`, The function to be performed when the collision takes place. Preferably, this should be an async function. (function)
+
+`collision.now`, A variable that is true when a collision is currently happening, And false when it is not. (boolean)
 
 
 
 
 
 
-
-
+.
+.
+.
+.
+.
+.
+.
