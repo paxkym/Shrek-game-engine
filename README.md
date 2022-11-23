@@ -40,6 +40,8 @@ The object contains the following:
 
 `game.maps`, is the master maps array.  (array)
 
+`game.main`, is the sprite for the main character. (Sprite/Item)
+
 `game.target`, is the canvas context that will contain your game (html element)
 
 `game.map`, contains the current map (int)
@@ -109,11 +111,22 @@ Full sprites contain:
 
 `track`, The current animation track. (int)
 
+`id`, A string which helps the developer identify specific sprites in a room, or collison. (string)
+
+`class`, A string which helps identify a type of sprite. (string) For example:
+
+`sprite.class = 'grass'`. This info is not used by the engine, but can be used on collisions to detect if an item is solid or not.
+
 `frames`, The number of frames that each image in the animation track is displayed for (int)
 
 `render()`, The function that is called each frame (function). Like with objects, you will not need to worry about this function (unless you are not using a map)
 
 `p`, An object that serves no purpose, other than to store information about the sprite. This object can only be changed by the developer, and is not interacted with by the engine. (object)
+
+When declaring a  new full sprite, you set each input argument like so:
+```
+var Skeleton = new Sprite(x, y, tracks, frames)
+```
 
 `collision`, Information about the last sprite collision (object). It contains:
 
@@ -125,8 +138,22 @@ Full sprites contain:
 
 `collision.now`, A variable that is true when a collision is currently happening, And false when it is not. (boolean)
 
+`collision.id`, The id string of the collided sprite (string)
 
+`collision.class`, The class string of the collided sprite (string)
+#### Rooms
 
+A Room is a special container for sprites, which performs automatic rendering, as well as detection for certain things, like collisions. Rooms are technically an optional structure, but without them, you will need to manually render each sprite in your game loop, and calculate hitboxes yourself. You also cannot use a map strucure without a room.
+
+`sprites`, An array of all the things in the room. (array)
+
+`l`, The index in the master map array for the room that you are taken to when the main sprite is too far left. (int)
+
+`r`, The right offscreen reference (same as l, but for right instead of left)
+
+`u`, The top offscreen reference
+
+`d`, The bottom offscreen reference
 
 
 
