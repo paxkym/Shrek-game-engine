@@ -11,7 +11,8 @@ settings:{
  room:null, 
  break:false,
  windowWidth:450,
- windowHeight:200
+ windowHeight:200, 
+ main:null
 }
 function loadImage(path, x, y){
     if(game.settings.antiAliasing){
@@ -62,16 +63,19 @@ class Sprite {
     y = 0
     tracks = []
     track = 0
+    class = null
+    id = null
     collision = {
     on: function(){},
     type:null,
-    number:null
+    number:null,
+    id:null
     }
     p = {}
     frames = 5
     i = 0
     frame = 0
-    stop = true
+    stop = false
     constructor(x, y, tracks, frames){
         this.frames = frames
         this.i = 0
@@ -91,10 +95,10 @@ class Sprite {
             this.i = 0
         }
     }
-        // console.log(this.track[this.i])
     loadImage(this.tracks[this.track][this.i],this.x,this.y)
     }
-    }
+}
+
 function wait(time){
     setTimeout(start, time*1000)
 }
