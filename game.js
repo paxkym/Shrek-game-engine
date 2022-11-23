@@ -2,34 +2,37 @@ const canvas = document.getElementById('game')
 const ctx = canvas.getContext('2d')
 game.target = ctx
 var i = 0
-const Graphic = new Sprite(10,10,[['./shrek/Shrek-backward-1.png','./shrek/Shrek-backward-3.png'],['shrek/Shrek-forward-2.png','shrek/Shrek-forward-3.png'], ['shrek/Shrek-left-2.png','shrek/Shrek-left-3.png'], ['shrek/Shrek-right-2.png','shrek/Shrek-right-3.png']], 5)
-
+const stepSize = 4
+const Shrek = new Sprite(10,10,[['./shrek/Shrek-backward-1.png','./shrek/Shrek-backward-3.png'],['shrek/Shrek-forward-2.png','shrek/Shrek-forward-3.png'], ['shrek/Shrek-left-2.png','shrek/Shrek-left-3.png'], ['shrek/Shrek-right-2.png','shrek/Shrek-right-3.png']], 1)
+const Water = new Item(100,30, ['./shrek/deep-water-1.png','./shrek/deep-water-2.png','./shrek/deep-water-3.png'], 8)
 game.loop = function(){
     i++
-    console.log('amogus')
-    game.break = i>200
-    Graphic.render()
-    Graphic.stop = true
+    game.break = i>600
+    Shrek.render()
+    Water.render()
 }
 
 window.onkeydown = function(key){
     if(key.key == 'w'){
-        Graphic.stop = false
-        Graphic.track = 0
-        Graphic.y--
+        Shrek.stop = false
+        Shrek.track = 0
+        Shrek.y -= stepSize
     }else if(key.key == 's'){
-        Graphic.stop = false
-        Graphic.track = 1
-        Graphic.y++
+        Shrek.stop = false
+        Shrek.track = 1
+        Shrek.y += stepSize
    }else if(key.key == 'a'){
-    Graphic.stop = false
-    Graphic.track = 2
-    Graphic.x--
+    Shrek.stop = false
+    Shrek.track = 2
+    Shrek.x -= stepSize
 }else if(key.key == 'd'){
-    Graphic.stop = false
-    Graphic.track = 3
-    Graphic.x++
+    Shrek.stop = false
+    Shrek.track = 3
+    Shrek.x+= stepSize
 }
+}
+window.onkeyup = function(key){
+    Shrek.stop = true
 }
 
 start()
