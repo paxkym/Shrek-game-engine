@@ -76,11 +76,13 @@ Items contain multiple properties to function. This is a list of them:
 
 `x`, The x position (int)
 
+`y`, The y position (int)
+
 `width`, The width of the hitbox (int)
 
 `height`, The height of the hitbox (int)
 
-`y`, The y position (int)
+`layer`, A reference used by rooms to decide the order that sprites are rendered. (int) Smaller numbers mean lower layers.
 
 `track`, The series of images used to be put onscreen when animating the sprite. The array contains paths which lead to the images. (array)
 
@@ -117,9 +119,13 @@ Full sprites contain:
 
 `sprite.class = 'grass'`. This info is not used by the engine, but can be used on collisions to detect if an item is solid or not.
 
+`front`, A variable which decides if a sprite is rendered in the front, or back. If it is rendered in the same layer as another sprite, 
+
 `frames`, The number of frames that each image in the animation track is displayed for (int)
 
-`render()`, The function that is called each frame (function). Like with objects, you will not need to worry about this function (unless you are not using a map)
+`layer`, A reference used by rooms to decide the order that sprites are rendered. (int) Smaller numbers mean lower layers.
+
+`render()`, The function that is called each frame, which renders the next frame of animation for the sprite (function). Like with items, you will not need to worry about this function (unless you are not using a map)
 
 `p`, An object that serves no purpose, other than to store information about the sprite. This object can only be changed by the developer, and is not interacted with by the engine. (object)
 
@@ -155,6 +161,7 @@ A Room is a special container for sprites, which performs automatic rendering, a
 
 `d`, The bottom offscreen reference
 
+`render`, Renders each frame of animation
 
 
 .
