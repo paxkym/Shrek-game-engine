@@ -1,6 +1,7 @@
 var game = { 
     loop:function(){}, 
 maps:[],
+start:function(){},
 settings:{
     frameRate:25,
      antiAliasing:false,
@@ -35,6 +36,7 @@ track = []
 frames = 5
 i = 0
 frame = 0
+front = false
 constructor(x, y, track, frames){
     this.frames = frames
     this.i = 0
@@ -76,6 +78,7 @@ class Sprite {
     i = 0
     frame = 0
     stop = false
+    front = true
     constructor(x, y, tracks, frames){
         this.frames = frames
         this.i = 0
@@ -98,15 +101,24 @@ class Sprite {
     loadImage(this.tracks[this.track][this.i],this.x,this.y)
     }
 }
-
-function wait(time){
-    setTimeout(start, time*1000)
+class Room {
+    constructor(sp){
+    this.sprites = sp
+    }
+    sprites = []
+   render = function (){
+        this.sprites.forEach(i => function(){
+            
+            i.render()
+        })
+    }
 }
-function start(){
+
+game.start = function(){
     if(game.break){
         return
     }
     game.loop()
-    wait(1/game.settings.frameRate)
+    setTimeout(game.start, (1/game.settings.frameRate)*1000)
     game.target.clearRect(0, 0, game.windowWidth, game.windowHeight);
 }
