@@ -4,7 +4,159 @@ Documentation and engine created by Paxon Kymissis
 
 v1.0
 
----
+---var game = { 
+    loop:function(){}, 
+maps:[],
+start:function(){},
+settings:{
+    frameRate:25,
+     antiAliasing:false,
+     dialogue:{font:'Helvetica', size:'10px', color:'black', background:'teal'}
+    },
+ target:null, 
+ map:null, 
+ room:null, 
+ break:false,
+ windowWidth:450,
+ windowHeight:200, 
+ main:null
+}
+function loadImage(path, x, y){
+    if(game.settings.antiAliasing){
+        game.target.imageSmoothingEnabled = true
+    }else{
+        game.target.imageSmoothingEnabled = false
+    }
+    var ld = new Image()
+    ld.src = path
+    ld.onload = function(){
+game.target.drawImage(ld, x, y)
+    }
+}
+class Item {
+width = 10
+height = 10
+x = 0
+y = 0
+track = []
+frames = 5
+i = 0
+frame = 0
+front = false
+layer = 0
+constructor(x, y, track, frames){
+    this.frames = frames
+    this.i = 0
+    this.frame = 0
+    this.x = x
+this.y = y
+this.track = track
+}
+render(){
+    this.frame++
+    if(this.frame == this.frames+1){
+        this.i++
+        this.frame = 0
+    }
+    if(this.i == this.track.length){
+        this.i = 0
+    }
+    // console.log(this.track[this.i])
+loadImage(this.track[this.i],this.x,this.y)
+}
+}
+class Sprite {
+    width = 10
+    height = 10
+    x = 0
+    y = 0
+    tracks = []
+    track = 0
+    class = null
+    id = null
+    collision = {
+    on: function(){},
+    type:null,
+    number:null,
+    id:null,
+    now:false,
+    class:null
+    }
+    p = {}
+    frames = 5
+    i = 0
+    frame = 0
+    stop = false
+    layer = 0
+    constructor(x, y, tracks, frames){
+        this.frames = frames
+        this.i = 0
+        this.frame = 0
+        this.x = x
+    this.y = y
+    this.tracks = tracks
+    }
+    render(){
+        if(!this.stop){
+        this.frame++
+        if(this.frame == this.frames+1){
+            this.i++
+            this.frame = 0
+        }
+        if(this.i == this.tracks[this.track].length){
+            this.i = 0
+        }
+    }
+    loadImage(this.tracks[this.track][this.i],this.x,this.y)
+    }
+}
+class Room {
+    sprites = []
+    constructor(sp){
+    this.sprites = sp
+    }
+   render = function (){
+    // Layer calculation
+    let list = this.sprites
+    let order = []
+    let ignore = []
+    let result = []
+    // Extracting the layer from each sprite and ordering them
+    // Algorithm is O(n^2), not the most efficient
+    for(let i = 0; i<list.length; i++){
+        order.push(list[i].layer)
+    }
+    order = order.sort()
+    // Matching each sprite with its orig layer
+    // to order them after sorting them
+    // and then rendering them onscreen in that order
+    for(let i = 0; i<order.length; i++){
+        for(let i2 = 0; i2<list.length; i2++){
+            if(list[i2].layer == order[i] && !ignore.includes(list[i2])){
+                ignore.push(list[i2])
+                result.push(list[i2])
+            }
+        }
+    }
+    for(let i = 0; i<this.sprites.length; i++){
+        result[i].render()
+    }
+    }
+    calculateHitboxes = function(){
+        for(let i = 0; i<this.sprites.length; i++){
+
+        }
+    }
+}
+
+game.start = function(){
+    if(game.break){
+        return
+    }
+    game.loop()
+    setTimeout(game.start, (1/game.settings.frameRate)*1000)
+    game.target.clearRect(0, 0, game.windowWidth, game.windowHeight);
+}
 ## Section 1
 This section will be an overview of how the game engine works. The usage is documented in further sections. The game engine as shown on its github repository contains an additional game bundled in with the library. This is an absolute necessity for testing, and the game may be played if you wish, or can be ignored. All code (including the game) is free, and open-source under the MIT License. 
 #### Basic overview
