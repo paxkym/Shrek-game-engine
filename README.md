@@ -123,7 +123,7 @@ Full sprites contain:
 
 `frames`, The number of frames that each image in the animation track is displayed for (int)
 
-`layer`, A reference used by rooms to decide the order that sprites are rendered. (int) Smaller numbers mean lower layers.
+`layer`, A reference used by rooms to decide the order that sprites are rendered. (int) Smaller numbers mean lower layers. When two sprites are on the same layer, the first in the sprite list will be rendered earlier.
 
 `render()`, The function that is called each frame, which renders the next frame of animation for the sprite (function). Like with items, you will not need to worry about this function (unless you are not using a map)
 
