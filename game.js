@@ -5,12 +5,13 @@ var i = 0
 const stepSize = 4
 const Shrek = new Sprite(10,10,[['./shrek/Shrek-backward-1.png','./shrek/Shrek-backward-3.png'],['shrek/Shrek-forward-2.png','shrek/Shrek-forward-3.png'], ['shrek/Shrek-left-2.png','shrek/Shrek-left-3.png'], ['shrek/Shrek-right-2.png','shrek/Shrek-right-3.png']], 1)
 const Water = new Item(100,30, ['./shrek/deep-water-1.png','./shrek/deep-water-2.png','./shrek/deep-water-3.png'], 8)
+Shrek.layer = 1
 const outside = new Room([Water, Shrek])
 game.loop = function(){
     i++
     game.break = i>600
-    Shrek.render()
-    Water.render()
+outside.render()
+outside.calculateHitboxes()
 }
 
 window.onkeydown = function(key){
