@@ -8,7 +8,11 @@ v1.0
 ## Section 1
 This section will be an overview of how the game engine works. The usage is documented in further sections. The game engine as shown on its github repository contains an additional game bundled in with the library. This is an absolute necessity for testing, and the game may be played if you wish, or can be ignored. All code (including the game) is free, and open-source under the MIT License. 
 #### Basic overview
-Shrek game engine is a bitmap game engine which is desgned for ease of animation, utility, speed, and small size. The game engine is 100% frontend code that can be run in the browser, Or be used in an app (That supports web rendering). It is not reccomended however, that the engine is used in a browser, as a web browser may slow down code execution. This will drop the frame rate, and may cause som sub-frame processing glitches. Instead, use a dedicated renderer; You may also use a framework of your choice, although the reccomended usage is in electron.
+Shrek game engine is a bitmap game engine which is desgned for ease of animation, utility, speed, and small size. The game engine is 100% frontend code that can be run in the browser, Or be used in an app (That supports web rendering). It is not recomended however, that the engine is used in a browser, as a web browser may slow down code execution. This will drop the frame rate, and may cause some sub-frame processing glitches. Instead, use a dedicated renderer; You may also use a framework of your choice, although the reccomended usage is in electron.
+Shrek game engine is not capable of anything that is not mentioned in the documentation, such as playing audio, or 3d games. If you want another feature, fork the repo, and add it there. To modify the source code, section 4 describes its inner functionality. This will aid in its modification.
+
+
+**Important:** Please read ***All the way*** through the documentation and demo before using the game engine.
 #### Structure
 Shrek game engine contains four main structures:
 ##### Items
@@ -62,10 +66,6 @@ The object contains the following:
  `game.settings.frameRate`, is the frame rate of the game. Please note that the game's maximum frame rate is limited by your computers hardware, and is by default set to 25 fps (int)
  
  `game.settings.antiAliasing`, decides if the canvas graphics are anti-aliased. Setting this variable to false is not guaranteed to eradicate smoothing, due to unavoidable limitations in browsers. This is true for every html game engine, and may cause for smaller pixelated images to be smoothed. (boolean)
-
-`game.settings.dialogue`, is an object containing settings for the dialogue boxes. (object) It defaultly contains: `{font:'Helvetica', size:'10px', color:'black', background:'teal'}`
-
-Note that 'size' sets the _**font size**_
 
 ---
 ## Section 2
@@ -161,7 +161,108 @@ A Room is a special container for sprites, which performs automatic rendering, a
 
 `d`, The bottom offscreen reference
 
-`render`, Renders each frame of animation
+`render()`, Renders each frame of animation
+
+## Section 3
+This section is a demonstration showing how to make the demo game bundled in with the library. When you use this tutorial, it is assumed that you already have prior knowledge about html, and js, and have made some kind of thing with them.
+#### Step 1: Import files
+First, download the 'shrek' folder, and the 'Shrek-game-engine.js' file. Next, create a file called 'game.js' (or whatever you want to call it).
+
+Then, create the 'index.html' file and put the following in it:
+
+```
+<!DOCTYPE html>
+<body>
+<head>
+<title>Shrek</title>
+</head>
+<canvas id="game" height="200" width="450"></canvas>
+<script src="Shrek-game-engine.js"></script>
+<script src="game.js"></script>
+</body>
+```
+You have now made the index file.
+
+#### Step 2: Setup the game
+Go into 'game.js', and then add the following:
+
+```
+const canvas = document.getElementById('game')
+game.windowWidth = canvas.width
+game.windowHeight = canvas.height
+game.settings.frameRate = 25
+const ctx = canvas.getContext('2d')
+game.target = ctx
+```
+
+This is just some basic setup to let the engine know where to render the game, by setting the target to an apropriate graphics context, as well as setting some preferences.
+
+We also have to make a room, to put everything in, so we'll make a room called 'pond' like so:
+
+`const pond = new Room([])`
+
+, and then put it into a map:
+
+`game.maps.push([pond])`
+
+Maps are not a special structure, they are simply just arrays. The game parses the master map array (stored inside of `game.maps`), takes the current map, (`game.map`) and the current room in that map (`game.room`), and renders it each frame. To do this, paste in the following:
+
+```
+game.map = 0
+game.room = 0
+```
+
+You have now created a room which is ready to be rendered.
+
+#### Step 3: Put sprites onscreen
+We'll now create an item, called Water:
+
+```
+const Water = new Item(100,30,['./shrek/deep-water-1.png','./shrek/deep-water-2.png','./shrek/deep-water-3.png'], 8)
+Water.width = 20
+Water.height = 20
+```
+
+This item has three images in its animation track, and each is onscreen for 8 frames, with the coordinates 100,30
+
+Next, put it into the room:
+
+`pond.sprites.push(Water)`
+ 
+ Add the code: `game.start()` at the end of your code, to let the game know that it is ready to begin.
+ 
+ Finally, run the program by going into your web browser, and paste in the file path of your html file. You should now see an animated block of water.
+ 
+ You have now created a simple animation. 
+ 
+ For reference, your code should look something like this:
+ 
+ ```
+ // Setup
+const canvas = document.getElementById('game')
+game.windowWidth = canvas.width
+game.windowHeight = canvas.height
+game.settings.frameRate = 25
+const ctx = canvas.getContext('2d')
+game.target = ctx
+game.map = 0
+game.room = 0
+// Game
+const pond = new Room([])
+game.maps.push([pond])
+const Water = new Item(100,30,['./shrek/deep-water-1.png','./shrek/deep-water-2.png','./shrek/deep-water-3.png'], 8)
+Water.width = 20
+Water.height = 20
+pond.sprites.push(Water)
+game.start()
+ ```
+
+#### Step 3: Add a player
+
+We have created a static object, but you can also add a moving sprite.
+
+
+
 
 
 .
