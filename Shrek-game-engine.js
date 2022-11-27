@@ -1,3 +1,5 @@
+document.body.innerHTML += "<canvas id='rendering_helper' hidden>This canvas was placed by the game engine</canvas>"
+const graphicsRenderingHelper = document.getElementById('rendering_helper').getContext('2d')
 var game = { 
     loop:function(){}, 
 maps:[],
@@ -21,9 +23,10 @@ function loadImage(path, x, y){
         game.target.imageSmoothingEnabled = false
     }
     var ld = new Image()
+    
     ld.src = path
     ld.onload = function(){
-game.target.drawImage(ld, x, y)
+        graphicsRenderingHelper.drawImage(ld, x, y)
     }
 }
 class Item {
@@ -115,7 +118,6 @@ class Room {
     let ignore = []
     let result = []
     // Extracting the layer from each sprite and ordering them
-    // Algorithm is O(n^2), not the most efficient
     for(let i = 0; i<list.length; i++){
         order.push(list[i].layer)
     }
@@ -123,6 +125,7 @@ class Room {
     // Matching each sprite with its orig layer
     // to order them after sorting them
     // and then rendering them onscreen in that order
+     // Algorithm is O(n^2), not the most efficient
     for(let i = 0; i<order.length; i++){
         for(let i2 = 0; i2<list.length; i2++){
             if(list[i2].layer == order[i] && !ignore.includes(list[i2])){
@@ -182,8 +185,7 @@ class Room {
                 sprites[i].collision.now = true
                 sprites[i].collision.id = this.sprites[i2].id
                 sprites[i].collision.class = this.sprites[i2].class
-                console.log(sprites[i].collision)
-                console.log(sprites[i], " Is touching ", this.sprites[i])
+                sprites[i].collision.on()
             }
         }
             }
@@ -192,12 +194,18 @@ class Room {
 }
 
 game.start = function(){
+ runGameFrames()
+}
+function runGameFrames(){
+   
     if(game.break){
         return
     }
     game.loop()
     game.maps[game.map][game.room].render()
     game.maps[game.map][game.room].calculateHitboxes()
-    setTimeout(game.start, (1/game.settings.frameRate)*1000)
-    game.target.clearRect(0, 0, game.windowWidth, game.windowHeight);
+    setTimeout(runGameFrames, (1/game.settings.frameRate)*1000)
+    game.target.drawImage(document.getElementById('rendering_helper'), 10, 10)
+    // graphicsRenderingHelper.clearRect(0, 0, game.windowWidth, game.windowHeight)
+
 }
