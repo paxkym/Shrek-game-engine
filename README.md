@@ -223,13 +223,13 @@ Water.width = 20
 Water.height = 20
 ```
 
-This item has three images in its animation track, and each is onscreen for 8 frames, with the coordinates 100,30
+This item has three images in its animation track, and each is onscreen for 8 frames, with the coordinates 100, 30, and a hitbox size of 20, 20
 
 Next, put it into the room:
 
 `pond.sprites.push(Water)`
  
- Add the code: `game.start()` at the end of your code, to let the game know that it is ready to begin.
+ Add the code: `game.start()` at the end of your code, to let the game know that it is ready to begin. When you add this please be sure to ***always*** keep it at the ***very end*** of your code
  
  Finally, run the program by going into your web browser, and paste in the file path of your html file. You should now see an animated block of water.
  
@@ -259,8 +259,198 @@ game.start()
 
 #### Step 3: Add a player
 
-We have created a static object, but you can also add a moving sprite.
+We have created a static object, but you can also add a moving sprite. To do this, it is similar to item creation:
 
+`const Shrek = new Sprite(10,10,[['./shrek/Shrek-backward-1.png','./shrek/Shrek-backward-3.png'],['shrek/Shrek-forward-2.png','shrek/Shrek-forward-3.png'], ['shrek/Shrek-left-2.png','shrek/Shrek-left-3.png'], ['shrek/Shrek-right-2.png','shrek/Shrek-right-3.png']], 1)`
+
+it is the same, except this time the animation is an array of other animations instead. These are the animation tracks, and they can be switched by setting the track variable. Push Shrek to the `pond.sprites` array, and then look at the result. You can do so by adding:
+
+```
+ const Shrek = new Sprite(10,10,[['./shrek/Shrek-backward-1.png','./shrek/Shrek-backward-3.png'],['shrek/Shrek-forward-2.png','shrek/Shrek-forward-3.png'], ['shrek/Shrek-left-2.png','shrek/Shrek-left-3.png'], ['shrek/Shrek-right-2.png','shrek/Shrek-right-3.png']], 1)
+ Shrek.width = 5
+Shrek.height = 13
+Shrek.layer = 1
+pond.sprites.push(Shrek)
+```
+
+You'll see that shrek is on layer 1, whereas by default, the water is on layer zero. This means that shrek is in front of the water instead of behind.
+
+Now, we need to make shrek move. We can do so by using the `window.onkeydown` function, and moving shrek's position when certain keys are pressed. To do so, add this:
+
+```
+const stepSize = 4
+window.onkeydown = function(key){
+    if(key.key == 'w'){
+        Shrek.track = 0
+        Shrek.y -= stepSize
+    }else if(key.key == 's'){
+        Shrek.track = 1
+        Shrek.y += stepSize
+   }else if(key.key == 'a'){
+    Shrek.track = 2
+    Shrek.x -= stepSize
+}else if(key.key == 'd'){
+    Shrek.track = 3
+    Shrek.x+= stepSize
+}
+}
+```
+
+If you run the code now, you'll see that shrek moves when you press the WASD keys, but doesn't stop his running animation. To stop it, we can use the `.stop` property of sprites, which stops animataing the sprite, until it is set to true again. You can add this by putting: `shrek.stop = false` between the if statement, and `shrek.track` setting. In other words, do this for every if statement above:
+```
+   }else if(key.key == 'a'){
+   shrek.stop = false // this will be added in
+    Shrek.track = 2
+    Shrek.x -= stepSize
+}else if(key.key == 'd'){
+```
+
+Now, add this code:
+
+```
+window.onkeyup = function(key){
+    Shrek.stop = true
+}
+```
+
+to stop it each time the key is up. The code you added before will cancel that stop when the key is pressed down again.
+
+There is now a new problem, which is that shrek does not stand when he stops walking, he stays frozen in his animation. You can add more code to the `onkeyup` function by saying that when the key is up, the last key to be pressed must have been the direction, and therefore shrek must have his new animation set to the static standing animation for that direction. To do this, give shrek four new animation tracks, by setting his declaration to the following:
+
+`
+const Shrek = new Sprite(10,10,[['./shrek/Shrek-backward-1.png','./shrek/Shrek-backward-3.png'],['shrek/Shrek-forward-2.png','shrek/Shrek-forward-3.png'], ['shrek/Shrek-left-2.png','shrek/Shrek-left-3.png'], ['shrek/Shrek-right-2.png','shrek/Shrek-right-3.png'], ['shrek/Shrek-right-1.png', 'shrek/Shrek-right-1.png'], ['shrek/Shrek-left-1.png', 'shrek/Shrek-left-1.png'], ['shrek/Shrek-forward-1.png', 'shrek/Shrek-forward-1.png'], ['shrek/Shrek-backward-2.png', 'shrek/Shrek-backward-2.png']], 1)
+`
+
+You will see two of the same frame in each idle track. This is because of internal game limitations which require at least two animation frames.
+
+Now, set `onkeyup` to the folowing:
+
+```
+window.onkeyup = function(key){
+    let direction = key.key
+    if(direction === 'd'){
+    Shrek.track = 4
+    }else if(direction === 'a'){
+        Shrek.track = 5
+        }else if(direction === 's'){
+            Shrek.track = 6
+            }else if(direction === 'w'){
+                Shrek.track = 7
+                }
+    Shrek.render()
+    Shrek.stop = true
+}
+```
+
+This code checks the key last pressed, and sets its track accordingly. Because the animation is stopped when this happens, shrek is manually rendered once to add the idle animation.
+
+#### Step 4: Increase the pond size
+
+Shrek's pond currently has only has one block of water. Let's add some more.
+To do so, we'll create a function that makes water blocks, called Water(). First, add a new item with an identical declaration as our other water block:
+
+```
+function Water(x, y){
+ const item = new Item(x,y,['./shrek/deep-water-1.png','./shrek/deep-water-2.png','./shrek/deep-water-3.png'], 8)
+ 
+}
+```
+
+Then, add the hitbox size (inside the function):
+
+```
+ item.width = 20
+ item.height = 20
+```
+
+Next, give it a class, which will let us know that it is water:
+
+`item.class = 'water'`
+
+And return value:
+
+```
+return item
+```
+
+next, remove the water sprite that we added before, by removing the lines mentioning it.
+
+We can now add the new water to the room:
+
+```
+pond.sprites = pond.sprites.concat([Water(100, 30), Water(120, 30), Water(140, 30), Water(100, 30), Water(100, 50), Water(120, 50), Water(140, 50), Water(100, 50), Water(80, 30), Water(120, 70), Water(160, 10), Water(160, 30)])
+```
+
+you should now have a pond.
+
+#### Step 5: make solid sprites
+
+Currently, shrek can walk on top of the water, which is not realistic. To de-jesusify shrek, you need to use hitboxes. First, set collision.on for shrek:
+
+```
+Shrek.collision.on = function(){
+if(Shrek.collision.class === 'water'){
+    console.log('hi')
+    if(direc == 'a'){
+        Shrek.x++
+    }else if(direc == 'd'){
+        Shrek.x--
+    }else if(direc == 'w'){
+        Shrek.y++
+    }else if(direc == 's'){
+        Shrek.y--
+    }
+}
+}
+```
+
+But before you run the code, create a global variable called 'direc', and inside of onkeydown, put: `direc = key.key` to let the collision detection know what direction you are in.
+
+However, this method is not recommended, because it pushes you in the opposite direction you are in. This allows for super mario brothers style glitches to push you deep into areas you noramlly can't go into, and if you want, you can try to push yourself into the pond by going upwards into a block, and then during the short period that you are inside of it, hit the D key, which should, if done properly, push you left through the blocks.
+
+Now, shrek can't go into the pond (mostly) and other blocks with the class 'water'.
+
+#### Step 6: Adding greenery
+
+Shrek has some water, but now he may need some grass. To do this, we'll add a grass creating function:
+
+```
+function Grass(x, y){
+    const item = new Item(x,y,['shrek/short-grass-1.png', 'shrek/short-grass-2.png', 'shrek/short-grass-3.png'], 7)
+    item.width = 20
+    item.height = 20
+    item.class = 'short-grass'
+    return item 
+}
+```
+
+, And then put some grass onscreen. But we need to fill the *entire screen* with it, and that may take a while. To combat this issue, create a function that fills items onscreen:
+
+```
+function fillItems(room, x, y, midx,  midy, type){
+     i = 0
+     i2 = 0
+    while(i<x){
+        while(i2<y){
+      room.sprites.push(type((i*20)+midx, (i2*20)+midy))
+      i2++
+    }
+    i2 = 0
+      i++
+    }
+    
+  }
+```
+
+And then use it to fill with grass:
+
+`fillItems(pond, 10, 7, 0, 0, Grass)`
+
+We can now add bushes, by adding a creation function for them:
+
+```
+
+```
 
 
 
