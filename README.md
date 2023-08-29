@@ -1,18 +1,18 @@
 To import the game engine, download the file: Shrek-game-engine.js. Next, put it as the _**first**_ script tag, then your code's script tag. This library is also available on npm, for those who use node (or browserify).
 # Shrek game engine
 Documentation and engine created by Paxon Kymissis
+### **Warning: this library does not work properly**
+
 
 v1.0
-
 ---
 ## Section 1
 This section will be an overview of how the game engine works. The usage is documented in further sections. The game engine as shown on its github repository contains an additional game bundled in with the library. This is an absolute necessity for testing, and the game may be played if you wish, or can be ignored. All code (including the game) is free, and open-source under the MIT License. 
 #### Basic overview
 Shrek game engine is a bitmap game engine which is desgned for ease of animation, utility, speed, and small size. The game engine is 100% frontend code that can be run in the browser, Or be used in an app (That supports web rendering). It is not recomended however, that the engine is used in a browser, as a web browser may slow down code execution. This will drop the frame rate, and may cause some sub-frame processing glitches. Instead, use a dedicated renderer; You may also use a framework of your choice, although the reccomended usage is in electron.
-Shrek game engine is not capable of anything that is not mentioned in the documentation, such as playing audio, or 3d games. If you want another feature, fork the repo, and add it there. To modify the source code, section 4 describes its inner functionality. This will aid in its modification.
+Shrek game engine is not capable of anything that is not mentioned in the documentation, such as playing audio, or 3d games. To modify the source code, section 4 describes its inner functionality. This will aid in its modification.
 
 
-**Important:** Please read ***All the way*** through the documentation and demo before using the game engine.
 #### Structure
 Shrek game engine contains four main structures:
 ##### Items
@@ -296,10 +296,10 @@ window.onkeydown = function(key){
 }
 ```
 
-If you run the code now, you'll see that shrek moves when you press the WASD keys, but doesn't stop his running animation. To stop it, we can use the `.stop` property of sprites, which stops animataing the sprite, until it is set to true again. You can add this by putting: `shrek.stop = false` between the if statement, and `shrek.track` setting. In other words, do this for every if statement above:
+If you run the code now, you'll see that shrek moves when you press the WASD keys, but doesn't stop his running animation when on water. To stop it, we can use the `.stop` property of sprites, which stops animating the sprite, until it is set to true again. You can add this by putting: `shrek.stop = false` between the if statement, and `shrek.track` setting. In other words, do this for every if statement above:
 ```
    }else if(key.key == 'a'){
-   shrek.stop = false // this will be added in
+   Shrek.stop = false // this will be added in
     Shrek.track = 2
     Shrek.x -= stepSize
 }else if(key.key == 'd'){
